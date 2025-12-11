@@ -1,0 +1,463 @@
+/* ==================================== */
+/* 1. BLACK & WHITE PALETTE VARIABLES */
+/* ==================================== */
+:root {
+  --primary-color: #000000;       /* Black for main titles/accents */
+  --secondary-color: #f0f0f0;     /* Light gray for background */
+  --text-color: #333333;          /* Dark gray for body text */
+  --bg-color: #ffffff;            /* White for content backgrounds */
+  --accent-light: #cccccc;        /* Medium gray for borders/dividers */
+  --shadow-dark: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--secondary-color);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================================== */
+/* 2. GLOBAL ELEMENTS & STRUCTURE (Final Desktop Fix) */
+/* ==================================== */
+
+/* Outer container for two-column desktop layout */
+.layout-container {
+    display: flex; /* Enables side-by-side columns */
+    max-width: 1400px; 
+    margin: 0 auto; 
+    flex-grow: 1;
+    position: relative; 
+}
+
+/* Wrapper for the page content (Left side) */
+.content-wrapper {
+    flex-basis: 60%; 
+    position: relative;
+    /* min-height ensures it takes space in the flex layout */
+    min-height: 100vh; /* Set to viewport height initially */
+    overflow-x: hidden; 
+    width: 50vw;
+}
+
+/* Wrapper for absolute positioned pages */
+.page-transition-area {
+    position: relative; 
+    /* Allows this container to expand past the viewport height */
+    min-height: calc(100vh - 80px); 
+    width: 100%;
+}
+
+/* Wrapper for the visualization (Right side) */
+.visualization-wrapper {
+    width: 50vw;
+    flex-basis: 40%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px); 
+    box-sizing: border-box;
+    position: sticky; 
+    top: 0;
+}
+
+/* Page content is absolutely positioned for transitions */
+.page-content {
+    padding: 40px;
+    width: 100%; 
+    position: absolute; 
+    box-sizing: border-box;
+    /* Ensure height is auto to fit content */
+    height: auto; 
+    min-height: 100%; 
+    padding-bottom: 80px; 
+}
+
+/* Canvas needs to fill its wrapper */
+.rotating-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+h1 {
+  font-size: 2.5em;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    border-left: 5px solid var(--primary-color);
+    padding-left: 10px;
+}
+
+h3 {
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+/* --- Card Style --- */
+.card {
+  background: var(--bg-color);
+  border: 1px solid var(--accent-light);
+  border-radius: 0; /* Minimalist look */
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: none; /* Removed shadow for flat B&W look */
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+    /* Subtle hover effect */
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color); 
+}
+
+/* ==================================== */
+/* 3. NAVBAR STYLING (Updated) */
+/* ==================================== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--accent-light);
+  box-shadow: none;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-title {
+  font-size: 1.5em;
+  font-weight: 900;
+  color: var(--primary-color);
+}
+
+/* Desktop Links */
+.nav-links {
+  display: flex; /* Default to show on desktop */
+}
+
+.nav-links a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--primary-color);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+.nav-links a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.resume-download-btn {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 0;
+  text-decoration: none;
+  font-weight: bold;
+  border: 1px solid var(--primary-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.resume-download-btn:hover {
+  background-color: white;
+  color: var(--primary-color);
+}
+
+/* Hide toggle button by default */
+.menu-toggle {
+    display: none; 
+}
+
+/* ==================================== */
+/* 4. HOME PAGE STYLING */
+/* ==================================== */
+
+.summary-text {
+  font-size: 1.1em;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.skill-tag {
+  background-color: var(--bg-color);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 8px 15px;
+  border-radius: 0;
+  font-size: 0.9em;
+  cursor: default;
+  transition: all 0.2s;
+}
+
+.skill-tag:hover {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+}
+
+
+/* ==================================== */
+/* 5. PROJECTS PAGE STYLING */
+/* ==================================== */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.project-card h2 {
+    color: var(--primary-color);
+    margin-top: 0;
+    border-left: none;
+    padding-left: 0;
+}
+
+.tech-stack {
+    font-style: italic;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.project-link-btn {
+    display: inline-block;
+    margin-top: 15px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.project-link-btn:hover {
+    color: var(--text-color);
+    border-bottom-color: var(--text-color);
+}
+
+
+/* ==================================== */
+/* 6. CONTACT PAGE STYLING */
+/* ==================================== */
+.contact-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.contact-item {
+    flex: 1 1 200px;
+    text-align: center;
+}
+
+.contact-item a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.contact-item a:hover {
+    color: var(--primary-color);
+}
+
+.contact-item .contact-value {
+    color: var(--text-color);
+    font-weight: bold;
+    cursor: default; 
+    display: block; 
+}
+
+
+/* ==================================== */
+/* 7. RESPONSIVENESS (Media Queries - Final) */
+/* ==================================== */
+
+/* Tablet & Smaller Screens (Max width 800px) */
+@media (max-width: 800px) {
+    /* HIDES THE 3D MODEL */
+    .visualization-wrapper {
+        display: none; 
+    }
+    
+    /* NAVBAR: Switches to a 3-column grid for Title, Toggle, and Download button */
+    .navbar {
+        padding: 15px 20px;
+        display: grid;
+        grid-template-areas: 
+            "title toggle download"
+            "links links links";
+        grid-template-columns: 1fr auto auto; 
+        align-items: start;
+        flex-wrap: wrap; 
+        height: auto;
+    }
+
+    .nav-title {
+        grid-area: title;
+        font-size: 1.2em;
+    }
+    
+    .resume-download-btn {
+        grid-area: download;
+    }
+    
+    /* Mobile Toggle Button Styling (Shown on mobile) */
+    .menu-toggle {
+        grid-area: toggle;
+        display: block; 
+        background: none;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        font-size: 1.5em;
+        cursor: pointer;
+        padding: 5px 10px;
+        line-height: 1;
+        transition: all 0.2s;
+        margin: 0 10px;
+    }
+    
+    .menu-toggle:hover {
+        background-color: var(--primary-color);
+        color: var(--bg-color);
+    }
+
+    /* Mobile Menu Links (Hidden by default, shown when 'open' class is applied) */
+    .nav-links {
+        grid-area: links;
+        display: none; 
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        background-color: var(--bg-color); 
+        border-top: 1px solid var(--accent-light);
+        padding: 10px 0;
+        margin-top: 10px;
+    }
+
+    .nav-links.open {
+        display: flex; /* Makes the menu visible */
+    }
+    
+    .nav-links a {
+        margin: 10px 0;
+        padding: 5px 0;
+        font-size: 1.1em;
+        width: 100%;
+    }
+    
+    /* LAYOUT COLLAPSE: Switches 2-column to 1-column */
+    .layout-container {
+        display: block; /* Switches from flex to block layout */
+        max-width: 100%;
+    }
+    
+    .content-wrapper {
+        width:100vw;
+        flex-basis: 100%;
+        min-height: auto;
+    }
+    
+    /* Fixes position: absolute overflow on mobile */
+    .page-content {
+        padding: 20px 15px;
+        position: static; 
+        min-height: auto;
+    }
+
+    h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-grid {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .contact-item {
+        flex: 1 1 100%;
+    }
+}
+
+/* Mobile Screens (Max width 500px) */
+@media (max-width: 500px) {
+    .resume-download-btn {
+        /* Adjust positioning to be closer to the title/toggle on very small screens */
+        text-align: center;
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+}
+
+
+/* Desktop Styles to ensure everything is reset above the mobile breakpoint */
+@media (min-width: 801px) {
+    .menu-toggle {
+        display: none; /* Hide the button on desktop */
+    }
+    
+    .nav-links {
+        display: flex !important; /* Force links to show on desktop */
+        flex-direction: row;
+        width: auto;
+        border-top: none;
+        margin-top: 0;
+        padding: 0;
+    }
+    
+    .navbar {
+        display: flex;
+        /* Reset grid areas to default flex behavior */
+        grid-template-areas: none;
+    }
+    
+    /* Ensure the visualization wrapper maintains fixed height on desktop */
+    .visualization-wrapper {
+        height: calc(100vh - 80px);
+        position: sticky;
+        top: 0;
+    }
+}
